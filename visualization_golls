@@ -70,3 +70,52 @@ fig = px.scatter(
 selected = plotly_events(fig)
 
 st.write(selected)
+
+
+
+LATEST:
+
+import streamlit as st
+import plotly.express as px
+
+st.subheader("Use Cases by Stage")
+
+# Fetch data
+case_data = data.get_stage_distribution(filters)
+
+if not case_data.empty:
+
+    # Create chart
+    fig = px.pie(
+        case_data,
+        values="COUNT",
+        names="STAGE",
+        hole=0.4,
+        color_discrete_sequence=px.colors.qualitative.Set3
+    )
+
+    # Display chart
+    st.plotly_chart(
+        fig,
+        use_container_width=True
+    )
+
+    # Stage selector
+    selected_stage = st.selectbox(
+        "Select Stage",
+        case_data["STAGE"].unique()
+    )
+
+    st.write("Selected Stage:", selected_stage)
+
+    # Fetch details
+    detail_df = data.get_case_details_by_stage(
+        filters,
+        selected_stage
+    )
+
+    # Display details
+    st.dataframe(
+        detail_df,
+        use_container_width=True
+    )
