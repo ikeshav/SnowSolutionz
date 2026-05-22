@@ -1,0 +1,53 @@
+import streamlit as st
+import plotly.express as px
+from streamlit_plotly_events import plotly_events
+
+# Title
+st.subheader("Use Cases by Stage")
+
+# Fetch data
+case_data = data.get_stage_distribution(filters)
+
+if not case_data.empty:
+
+    # Create pie chart
+    fig = px.pie(
+        case_data,
+        values="COUNT",
+        names="STAGE",
+        hole=0.4,
+        color_discrete_sequence=px.colors.qualitative.Set3
+    )
+
+    # Detect click events
+    selected_points = plotly_events(
+        fig,
+        click_event=True,
+        hover_event=False
+    )
+
+    # Debug output
+    st.write("Selected Points:", selected_points)
+
+    # If user clicked something
+    if selected_points:
+
+        # Get clicked slice index
+        point_index = selected_points[0]["pointNumber"]
+
+        # Get stage name from dataframe
+        selected_stage = case_data.iloc[point_index]["STAGE"]
+
+        st.write("Selected Stage:", selected_stage)
+
+        # Fetch detailed data
+        detail_df = data.get_case_details_by_stage(
+            filters,
+            selected_stage
+        )
+
+        # Show table
+        st.dataframe(
+            detail_df,
+            use_container_width=True
+        )
