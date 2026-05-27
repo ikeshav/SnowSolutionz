@@ -80,3 +80,55 @@ def display_stage_details(stage, use_cases):
         use_container_width=True,
         hide_index=True
     )
+
+
+
+Final Updated code:
+
+import streamlit as st
+
+def display_stage_details(stage, use_cases):
+
+    st.subheader(f"Details for {stage}")
+
+    required_columns = [
+        'USE_CASE_ID',
+        'TITLE',
+        'DAYS_IN_CURRENT_STAGE'
+    ]
+
+    # Check if dataframe is empty
+    if use_cases.empty or not all(col in use_cases.columns for col in required_columns):
+        st.info("No use cases available for the selected stage.")
+        return
+
+    # Select columns
+    display_df = use_cases[
+        ['USE_CASE_ID', 'TITLE', 'DAYS_IN_CURRENT_STAGE']
+    ]
+
+    # Rename columns for display
+    display_df.columns = [
+        "Use Case ID",
+        "Title",
+        "Days in Current Stage"
+    ]
+
+    # Apply center alignment to one column
+    styled_df = display_df.style.set_properties(
+        subset=["Days in Current Stage"],
+        **{"text-align": "center"}
+    )
+
+    # Display table
+    st.dataframe(
+        styled_df,
+        column_config={
+            "Title": st.column_config.TextColumn(
+                "Title",
+                width="small"
+            )
+        },
+        use_container_width=True,
+        hide_index=True
+    )
