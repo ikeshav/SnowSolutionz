@@ -1,0 +1,19 @@
+duration_value = 0
+
+if existing_data is not None:
+    duration_value = pd.to_numeric(
+        existing_data.get("ESTIMATED_DURATION_MONTHS", 0),
+        errors="coerce"
+    )
+
+    if pd.isna(duration_value):
+        duration_value = 0
+
+estimated_duration_in_months = st.number_input(
+    "Estimated Duration in Months",
+    min_value=0,
+    value=int(duration_value),
+    step=1,
+    key="estimated_duration_months",
+    help="Estimated duration required to complete or implement this use case"
+)
