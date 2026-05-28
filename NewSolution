@@ -1,0 +1,22 @@
+duration_value = 0
+
+if existing_data is not None:
+    raw_value = existing_data.get("ESTIMATED_DURATION_MONTHS", 0)
+
+    # Handle Series/DataFrame values
+    if isinstance(raw_value, pd.Series):
+        raw_value = raw_value.iloc[0]
+
+    duration_value = pd.to_numeric(raw_value, errors="coerce")
+
+    if pd.isna(duration_value):
+        duration_value = 0
+
+estimated_duration_in_months = st.number_input(
+    "Estimated Duration in Months",
+    min_value=0,
+    value=int(float(duration_value)),
+    step=1,
+    key="estimated_duration_months",
+    help="Estimated duration required to complete or implement this use case"
+)
